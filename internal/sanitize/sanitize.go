@@ -18,6 +18,11 @@ type Query struct {
 	Parts []Part
 }
 
+// SanitizedArgument is a preformatted argument that can be used 'as is'
+type SanitizedArgument struct {
+	Value string
+}
+
 // utf.DecodeRune returns the utf8.RuneError for errors. But that is actually rune U+FFFD -- the unicode replacement
 // character. utf8.RuneError is not an error if it is also width 3.
 //
@@ -47,6 +52,8 @@ func (q *Query) Sanitize(args ...any) (string, error) {
 			switch arg := arg.(type) {
 			case nil:
 				str = "null"
+			case SanitizedArgument:
+				str = arg.Value
 			case int64:
 				str = strconv.FormatInt(arg, 10)
 			case float64:

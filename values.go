@@ -5,6 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5/internal/anynil"
 	"github.com/jackc/pgx/v5/internal/pgio"
+	"github.com/jackc/pgx/v5/internal/sanitize"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -26,7 +27,7 @@ func convertSimpleArgument(m *pgtype.Map, arg any) (any, error) {
 	if buf == nil {
 		return nil, nil
 	}
-	return string(buf), nil
+	return sanitize.SanitizedArgument{Value: string(buf)}, nil
 }
 
 func encodeCopyValue(m *pgtype.Map, buf []byte, oid uint32, arg any) ([]byte, error) {
